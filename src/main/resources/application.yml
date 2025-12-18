@@ -3,6 +3,8 @@
 spring:
   application:
     name: veely
+  profiles:
+   active: local
 
   # --- Datasource ---
   datasource:
@@ -67,3 +69,9 @@ management:
 veely:
   storage:
     root: uploads
+  import:
+    enabled: false
+    baseDir: import
+    accounts: "Piano dei conti.XLSX"
+    vat: "Codici IVA.XLSX"
+    withholding: "Tabella Ritenute.XLSX"
