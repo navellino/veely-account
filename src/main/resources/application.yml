@@ -1,0 +1,69 @@
+# ===== Veely-Account - Production application.yml =====
+
+spring:
+  application:
+    name: veely
+
+  # --- Datasource ---
+  datasource:
+   url: jdbc:mysql://localhost:3306/veely_account?useUnicode=true&characterEncoding=utf8&serverTimezone=Europe/Rome
+   username: root
+   password: Lamothe_77
+   driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # --- JPA / Hibernate ---
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate                   # in prod: valida lo schema (niente create/update)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          time_zone: UTC                   # coerenza temporale
+
+  # --- Flyway migrations ---
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false              # utile se parti da schema esistente
+
+  # --- Upload ---
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+
+server:
+  port: 8080
+  forward-headers-strategy: native         # dietro Nginx/Reverse Proxy
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        http-only: true
+        secure: true
+        same-site: strict
+
+# --- Log ---
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
+    org.springframework.security: INFO
+
+# --- Actuator (minimo indispensabile) ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+veely:
+  storage:
+    root: uploads
