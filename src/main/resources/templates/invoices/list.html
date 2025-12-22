@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Fatture</h1>
+        <a class="btn btn-primary" th:href="@{/invoices/new}">Nuova fattura</a>
+    </div>
+
+    <form class="row g-3 mb-4" method="get" th:action="@{/invoices}">
+        <div class="col-md-2">
+            <label class="form-label" for="direction">Direzione</label>
+            <select class="form-select" id="direction" name="direction">
+                <option value="" th:selected="${direction == null || direction == ''}">Tutte</option>
+                <option th:each="dir : ${directions}" th:value="${dir.code}" th:text="${dir.description}"
+                        th:selected="${direction} == ${dir.code}"></option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Stato</label>
+            <select class="form-select" id="status" name="status">
+                <option value="" th:selected="${status == null}">Tutti</option>
+                <option th:each="s : ${statuses}" th:value="${s.id}" th:text="${s.description}"
+                        th:selected="${status} == ${s.id}"></option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="counterpartyId">Controparte</label>
+            <select class="form-select" id="counterpartyId" name="counterpartyId">
+                <option value="" th:selected="${counterpartyId == null}">Tutte</option>
+                <option th:each="c : ${counterparties}" th:value="${c.id}" th:text="${c.name}"
+                        th:selected="${counterpartyId} == ${c.id}"></option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="from">Da data</label>
+            <input type="date" class="form-control" id="from" name="from" th:value="${from}">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="to">A data</label>
+            <input type="date" class="form-control" id="to" name="to" th:value="${to}">
+        </div>
+        <div class="col-md-1">
+            <label class="form-label" for="q">Nr/Anno</label>
+            <input type="text" class="form-control" id="q" name="q" th:value="${q}" placeholder="numero o anno">
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button class="btn btn-outline-secondary" type="submit">Filtra</button>
+            <a class="btn btn-outline-secondary" th:href="@{/invoices}" th:if="${direction} || ${status} || ${counterpartyId} || ${from} || ${to} || ${q}">Reset</a>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>Direzione</th>
+                <th>Numero</th>
+                <th>Data</th>
+                <th>Controparte</th>
+                <th>Stato</th>
+                <th class="text-end">Totale</th>
+                <th class="text-end">Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(invoices)}">
+                <td colspan="7" class="text-center text-muted">Nessuna fattura trovata</td>
+            </tr>
+            <tr th:each="invoice : ${invoices}">
+                <td th:text="${invoice.direction.description}"></td>
+                <td>
+                    <div class="fw-semibold" th:text="${invoice.number}"></div>
+                    <small class="text-muted" th:text="${invoice.year}"></small>
+                </td>
+                <td th:text="${invoice.issueDate}"></td>
+                <td th:text="${invoice.counterparty.name}"></td>
+                <td th:text="${invoice.status.description}"></td>
+                <td class="text-end">
+                    <span th:text="${#numbers.formatDecimal(totals[invoice.id]?.grossTotal ?: 0, 1, 'COMMA', 2, 'POINT')}"></span>
+                </td>
+                <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/invoices/{id}(id=${invoice.id})}">Dettaglio</a>
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{/invoices/{id}/edit(id=${invoice.id})}">Modifica</a>
+                        <form th:action="@{/invoices/{id}/delete(id=${invoice.id})}" method="post" class="d-inline"
+                              th:onsubmit="return confirm('Sei sicuro di voler eliminare?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Elimina</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

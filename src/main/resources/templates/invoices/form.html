@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0" th:text="${invoice.id} != null ? 'Modifica fattura' : 'Nuova fattura'"></h1>
+        <a class="btn btn-outline-secondary" th:href="@{/invoices}">Torna alla lista</a>
+    </div>
+
+    <form th:action="${invoice.id} != null ? @{/invoices/{id}(id=${invoice.id})} : @{/invoices}"
+          th:object="${invoice}" method="post" class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label" for="direction">Direzione</label>
+            <select class="form-select" id="direction" th:field="*{direction.id}" required>
+                <option th:value="" disabled th:selected="*{direction} == null">Seleziona...</option>
+                <option th:each="dir : ${directions}" th:value="${dir.id}" th:text="${dir.description}"></option>
+            </select>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('direction')}">La direzione è obbligatoria</div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="status">Stato</label>
+            <select class="form-select" id="status" th:field="*{status.id}" required>
+                <option th:value="" disabled th:selected="*{status} == null">Seleziona...</option>
+                <option th:each="s : ${statuses}" th:value="${s.id}" th:text="${s.description}"></option>
+            </select>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('status')}">Lo stato è obbligatorio</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="counterparty">Controparte</label>
+            <select class="form-select" id="counterparty" th:field="*{counterparty.id}" required>
+                <option th:value="" disabled th:selected="*{counterparty} == null">Seleziona...</option>
+                <option th:each="c : ${counterparties}" th:value="${c.id}" th:text="${c.name}"></option>
+            </select>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('counterparty')}">La controparte è obbligatoria</div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label" for="number">Numero</label>
+            <input type="text" class="form-control" id="number" th:field="*{number}" required>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="year">Anno</label>
+            <input type="number" class="form-control" id="year" th:field="*{year}" required>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="issueDate">Data emissione</label>
+            <input type="date" class="form-control" id="issueDate" th:field="*{issueDate}" required>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}"></div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="dueDate">Data scadenza</label>
+            <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}">
+        </div>
+
+        <div class="col-12">
+            <label class="form-label" for="notes">Note</label>
+            <textarea class="form-control" id="notes" rows="3" th:field="*{notes}"></textarea>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/invoices}">Annulla</a>
+            <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

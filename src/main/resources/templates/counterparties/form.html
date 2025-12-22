@@ -14,7 +14,7 @@
             <div class="col-md-6">
                 <label class="form-label" for="kindId">Tipo</label>
                 <select class="form-select" th:field="*{kindId}" id="kindId" required>
-                    <option th:value="" disabled th:selected="*{kindId} == null">Seleziona...</option>
+                    <option value="" disabled th:selected="*{kindId} == null">Seleziona...</option>
                     <option th:each="kind : ${kinds}" th:value="${kind.id}" th:text="${kind.description}"></option>
                 </select>
                 <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('kindId')}" th:errors="*{kindId}"></div>
