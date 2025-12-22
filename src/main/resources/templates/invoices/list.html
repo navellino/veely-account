@@ -47,7 +47,8 @@
         </div>
         <div class="col-12 d-flex gap-2">
             <button class="btn btn-outline-secondary" type="submit">Filtra</button>
-            <a class="btn btn-outline-secondary" th:href="@{/invoices}" th:if="${direction} || ${status} || ${counterpartyId} || ${from} || ${to} || ${q}">Reset</a>
+             <a class="btn btn-outline-secondary" th:href="@{/invoices}"
+               th:if="${direction or status or counterpartyId or from or to or q}">Reset</a>
         </div>
     </form>
 
