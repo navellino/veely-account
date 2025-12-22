@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0" th:text="${counterparty.id} != null ? 'Modifica controparte' : 'Nuova controparte'"></h1>
+        <a class="btn btn-outline-secondary" th:href="@{/counterparties}">Torna alla lista</a>
+    </div>
+
+    <form th:action="${counterparty.id} != null ? @{/counterparties/{id}(id=${counterparty.id})} : @{/counterparties}"
+          th:object="${counterparty}" method="post" class="needs-validation" novalidate>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="kindId">Tipo</label>
+                <select class="form-select" th:field="*{kindId}" id="kindId" required>
+                    <option th:value="" disabled th:selected="*{kindId} == null">Seleziona...</option>
+                    <option th:each="kind : ${kinds}" th:value="${kind.id}" th:text="${kind.description}"></option>
+                </select>
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('kindId')}" th:errors="*{kindId}"></div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="name">Nome</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="vatNumber">Partita IVA</label>
+                <input type="text" class="form-control" id="vatNumber" th:field="*{vatNumber}">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('vatNumber')}" th:errors="*{vatNumber}"></div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="taxCode">Codice fiscale</label>
+                <input type="text" class="form-control" id="taxCode" th:field="*{taxCode}">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('taxCode')}" th:errors="*{taxCode}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="pec">PEC</label>
+                <input type="email" class="form-control" id="pec" th:field="*{pec}">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('pec')}" th:errors="*{pec}"></div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="sdiCode">Codice SDI</label>
+                <input type="text" class="form-control" id="sdiCode" th:field="*{sdiCode}">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('sdiCode')}" th:errors="*{sdiCode}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="iban">IBAN</label>
+                <input type="text" class="form-control" id="iban" th:field="*{iban}">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('iban')}" th:errors="*{iban}"></div>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label" for="notes">Note</label>
+                <textarea class="form-control" id="notes" rows="3" th:field="*{notes}"></textarea>
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end gap-2">
+                <a class="btn btn-outline-secondary" th:href="@{/counterparties}">Annulla</a>
+                <button type="submit" class="btn btn-primary">Salva</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

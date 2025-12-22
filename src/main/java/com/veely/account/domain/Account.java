@@ -32,7 +32,7 @@ public class Account {
     @Column(nullable = false, length = 255)
     private String description;
 
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer level;
 
     @Column(nullable = false)

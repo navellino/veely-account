@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Controparti</h1>
+        <a class="btn btn-primary" th:href="@{/counterparties/new}">Nuova controparte</a>
+    </div>
+
+    <form class="mb-3" method="get" th:action="@{/counterparties}">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Cerca per nome" name="q" th:value="${q}">
+            <button class="btn btn-outline-secondary" type="submit">Cerca</button>
+            <a class="btn btn-outline-secondary" th:href="@{/counterparties}" th:if="${q}">Reset</a>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Partita IVA</th>
+                <th>Codice fiscale</th>
+                <th class="text-end">Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(counterparties)}">
+                <td colspan="5" class="text-center text-muted">Nessuna controparte trovata</td>
+            </tr>
+            <tr th:each="counterparty : ${counterparties}">
+                <td th:text="${counterparty.name}"></td>
+                <td th:text="${counterparty.kind.description}"></td>
+                <td th:text="${counterparty.vatNumber}"></td>
+                <td th:text="${counterparty.taxCode}"></td>
+                <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-sm btn-outline-secondary"
+                           th:href="@{/counterparties/{id}/edit(id=${counterparty.id})}">Modifica</a>
+                        <form th:action="@{/counterparties/{id}/delete(id=${counterparty.id})}" method="post"
+                              class="d-inline" th:onsubmit="return confirm('Sei sicuro di voler eliminare?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Elimina</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
