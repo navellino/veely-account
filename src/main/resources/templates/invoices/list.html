@@ -48,8 +48,8 @@
         <div class="col-12 d-flex gap-2">
             <button class="btn btn-outline-secondary" type="submit">Filtra</button>
              <a class="btn btn-outline-secondary" th:href="@{/invoices}"
-               th:if="${#strings.isNotEmpty(direction) or status != null or counterpartyId != null
-               or from != null or to != null or #strings.isNotEmpty(q)}">Reset</a>
+                th:if="${!#strings.isEmpty(direction) or status != null or counterpartyId != null
+                or from != null or to != null or !#strings.isEmpty(q)}">Reset</a>
         </div>
     </form>
 
